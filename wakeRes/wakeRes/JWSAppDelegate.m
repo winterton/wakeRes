@@ -168,9 +168,16 @@
 #pragma mark Misc Methods
 
 - (void) setDefaults {
-    [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"onWakeDelay"];
+    [[NSUserDefaults standardUserDefaults] setInteger:15 forKey:@"onWakeDelay"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"refreshOnWakeEnabled"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+#pragma mark - 
+#pragma mark About Window Methods
+
+- (IBAction)launchHelp:(id)sender {
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://github.com/winterton/wakeRes/blob/master/README.md"]];
 }
 
 @end

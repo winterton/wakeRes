@@ -7,9 +7,11 @@ Current Features
 - View current resolution
 - Force a resolution refresh
 - Set resolution to refresh on system wake.
-- Set a delay for the resolution refresh.
+- Set a delay for the resolution refresh. (Default is 15 seconds)
 
 Future Enhancements
 - Resolution & refresh rate selection.
 - Desktop image scripting (change w/ weather, seasons, etc.)
 - Trigger resolution refresh when a user defined app launches.
+
+Note: Application Icons are just placeholders at the moment. 
