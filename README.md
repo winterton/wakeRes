@@ -3,6 +3,12 @@ wakeRes
 
 A status bar app for Mac OS X that allows you to schedule a resolution refresh on system wake.
 
+What is it for?
+----------------
+This app helps to address the issue that causes "unsupported" AMD GPUs to run slower after your mac wakes up from
+sleep. Simply launch it when you log in to your machine, and it will reset your resolution for you everytime your
+machine wakes up.
+
 Current Features
 ----------------
 - View current resolution
@@ -14,7 +20,7 @@ Future Enhancements
 -------------------
 - Resolution & refresh rate selection.
 - Desktop image scripting (change w/ weather, seasons, etc.)
-- Trigger resolution refresh when a user defined app launches.
+- Trigger resolution refresh when a user defined app launches (useful for games and other GPU intensive apps).
 
 Note: Application Icons are just placeholders at the moment.
 
