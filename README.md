@@ -29,3 +29,9 @@ Troubleshooting
 - If your resolution fails to return to normal, log out and back in again. Resolution changes are session scoped.  
 - If GPU performance still suffers upon wake, try adjusting the delay to a longer setting.
 
+
+Screenshots
+-----------
+
+![wakeRes running on Mac OS 10.8](http://cloud.github.com/downloads/winterton/wakeRes/wakeres_screen.png)
+
