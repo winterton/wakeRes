@@ -5,7 +5,7 @@ A status bar app for Mac OS X that allows you to schedule a resolution refresh o
 
 What is it for?
 ----------------
-This app helps to address the issue that causes "unsupported" AMD GPUs to run slower after your mac wakes up from
+This app helps to address the issue that causes some AMD GPUs to run slower after your mac wakes up from
 sleep. Simply launch it when you log in to your machine, and it will reset your resolution for you everytime your
 machine wakes up.
 
