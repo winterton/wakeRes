@@ -15,7 +15,11 @@
 {
     // Insert code here to initialize your application
     [self registerForNotifications];
-    [self setDefaults];
+    
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"notFirstRun"]){
+        [self setDefaults];
+    }
+    
 }
 
 - (void)awakeFromNib {
@@ -25,12 +29,8 @@
     [_statusItem setHighlightMode:YES];
     
     [self updateCurrentResolutionItem];
+    [self updateSelectedDelayItem];
 }
-
-/*
- Use -(void)setImage:(NSImage*)image to set an image rather than status bar title
- 
- */
 
 - (IBAction)quitApp:(id)sender {
     [NSApp terminate:self];
@@ -53,6 +53,14 @@
     
     CGDisplayRelease(displayID);
     
+}
+
+- (void)updateSelectedDelayItem {
+    NSInteger delay = [[NSUserDefaults standardUserDefaults] integerForKey:@"onWakeDelay"];
+    
+    for (NSMenuItem* item in [_delayMenu itemArray]) {
+        item.state = (item.tag == delay) ? 1 : 0;
+    }
 }
 
 - (IBAction)toggleRefreshOnWakeFunctionality:(id)sender {
@@ -80,12 +88,11 @@
 
 - (IBAction)setDelay:(id)sender {
     NSMenuItem* sendingItem = (NSMenuItem*)sender;
-    
-    [sendingItem setState:1];
-    [[_delayMenu itemWithTag:[[NSUserDefaults standardUserDefaults] integerForKey:@"onWakeDelay"]] setState:0];
-    
+        
     [[NSUserDefaults standardUserDefaults] setInteger:sendingItem.tag forKey:@"onWakeDelay"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    [self updateSelectedDelayItem];
     
 }
 
@@ -170,6 +177,7 @@
 - (void) setDefaults {
     [[NSUserDefaults standardUserDefaults] setInteger:15 forKey:@"onWakeDelay"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"refreshOnWakeEnabled"];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"notFirstRun"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
