@@ -142,16 +142,62 @@
 #pragma mark -
 #pragma mark Sleep/Wake Notifications
 
-- (void) receiveWakeNote: (NSNotification*) note
+- (void) receiveWorkSpaceNotifications: (NSNotification*) note
 {
-    NSLog(@"receiveSleepNote: %@", [note name]);
-    
-    //refresh the resolution if user defaults shows wake enabled
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"refreshOnWakeEnabled"]) {
-        NSInteger delay = [[NSUserDefaults standardUserDefaults] integerForKey:@"onWakeDelay"];
-        [self performSelector:@selector(refreshResolution:) withObject:nil afterDelay:delay];
+    if ([note.name isEqualToString:NSWorkspaceDidWakeNotification]){
+        //refresh the resolution if user defaults shows wake enabled
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"refreshOnWakeEnabled"]) {
+            NSInteger delay = [[NSUserDefaults standardUserDefaults] integerForKey:@"onWakeDelay"];
+            [self performSelector:@selector(refreshResolution:) withObject:nil afterDelay:delay];
+        }
+    }
+    else if ([note.name isEqualToString:NSWorkspaceDidActivateApplicationNotification]) {
+        NSRunningApplication* application = [note.userInfo objectForKey:NSWorkspaceApplicationKey];
+        NSLog(@"%@ is activated",application);
+        if ([application.bundleIdentifier isEqualToString:@"com.apple.finder"]) {
+            NSLog(@"setting default presentation");
+            [self setDockAutoHide];
+        }
+    }
+    else if ([note.name isEqualToString:NSWorkspaceDidDeactivateApplicationNotification]) {
+        NSRunningApplication* application = [note.userInfo objectForKey:NSWorkspaceApplicationKey];
+        NSLog(@"%@ is deactiveated",application);
+        if(![application.bundleIdentifier isEqualToString:@"me.winterton.wakeRes"]){
+            NSLog(@"setting autohide");
+            [self setDockAutoHide];
+        }
+    }
+    else {
+        NSLog(@"Notification: %@",note.name);
     }
     
+}
+
+
+//Use HID event tap and run program as root?
+- (void) setDockAutoHide {
+    CGEventRef event1, event2, event3;
+    NSLog(@"authide command");
+    event1 = CGEventCreateKeyboardEvent(NULL, (CGKeyCode)55, true);
+    event2 = CGEventCreateKeyboardEvent(NULL, (CGKeyCode)58, true);
+    event3 = CGEventCreateKeyboardEvent(NULL, (CGKeyCode)4, true);
+    
+    CGEventPost(kCGSessionEventTap, event1);
+    CGEventPost(kCGSessionEventTap, event2);
+    CGEventPost(kCGSessionEventTap, event3);
+    
+    event1 = CGEventCreateKeyboardEvent(NULL, (CGKeyCode)55, false);
+    event2 = CGEventCreateKeyboardEvent(NULL, (CGKeyCode)58, false);
+    event3 = CGEventCreateKeyboardEvent(NULL, (CGKeyCode)4, false);
+    
+    
+    CGEventPost(kCGSessionEventTap, event1);
+    CGEventPost(kCGSessionEventTap, event2);
+    CGEventPost(kCGSessionEventTap, event3);
+    
+    CFRelease(event1);
+    CFRelease(event2);
+    CFRelease(event3);
 }
 
 - (void) registerForNotifications
@@ -160,8 +206,10 @@
     // notification center. You will not receive sleep/wake notifications if you file
     //with the default notification center.
     [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver: self
-                                                           selector: @selector(receiveWakeNote:)
-                                                               name: NSWorkspaceDidWakeNotification object: NULL];
+                                                           selector: @selector(receiveWorkSpaceNotifications:)
+                                                               name: NULL object: NULL];
+    
+    
 }
 
 #pragma mark - 
